@@ -1,0 +1,44 @@
+/* CSS for OembedXBlock */
+
+.oembed-xblock p {
+    cursor: pointer;
+}
+
+.oembed-xblock .tip {
+    float: right;
+    min-width: 20% !important;
+    width: 25%;
+}
+
+.oembed-xblock .wrapper iframe{
+    width: 100%;
+    min-height: 569px;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #cccccc;
+}
+
+.oembed-xblock .wrapper iframe.no-width-height{
+    top: 0;
+    left: 0;
+}
+
+.oembed-xblock .message {
+    width: 100%;
+    margin: 5px 0px 0px 0px;
+    font-size: 12px;
+}
+
+.oembed-xblock .error-message {
+    color: red;
+    display: none;
+    margin: 0px 0px 10px 0px;
+}
+
+.oembed-xblock .visible {
+    display: block;
+}
+    
+.oembed-xblock .error {
+    border: 1px solid red !important;
+}
