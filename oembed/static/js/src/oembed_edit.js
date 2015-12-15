@@ -1,5 +1,5 @@
-/* Javascript for OembedXBlock. */
-function OembedXBlock(runtime, element) {
+/* Javascript for OEmbedXBlock. */
+function OEmbedXBlock(runtime, element) {
 
   var display_name = $(element).find('input[name=edit_display_name]');
   var document_url = $(element).find('input[name=edit_document_url]');

@@ -1,5 +1,5 @@
-/* Javascript for OembedXBlock. */
-function OembedXBlock(runtime, element) {
+/* Javascript for OEmbedXBlock. */
+function OEmbedXBlock(runtime, element) {
 
 
     $(function ($) {

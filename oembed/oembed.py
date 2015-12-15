@@ -1,7 +1,6 @@
 """ 
-The "File Storage XBlock" allows course staffers to add files stored in various internet file storage services to the courseware (courseware, course info and syllabus) 
-by adding a link through an advanced component that they create in edX's Studio authoring tool. The files can be added either as embedded content, 
-or as links to the files in their original location.
+The "Oembed XBlock" allows course staffers to embed files/vidoes stored in various internet file storage services to the courseware (courseware, course info and syllabus)
+by adding a link through an advanced component that they create in edX's Studio authoring tool. The files or videos can be added as embedded content.
 """ 
 
 import textwrap
@@ -16,24 +15,19 @@ from xblock.fields import Scope, String
 from django.conf import settings
 
 import logging
-from functools import partial
-from cache_toolbox.core import del_cached_content
 
-from xmodule.contentstore.django import contentstore
-from xmodule.contentstore.content import StaticContent
-from opaque_keys.edx.keys import CourseKey
 LOG = logging.getLogger(__name__)
 from filter import Filter
 
 DEFAULT_DOCUMENT_URL = ('https://onedrive.live.com/embed?cid=ADC6477D8F22FD9D&resid=ADC6477D8F22FD9D%21104&authkey=AFWEOfGpKb8L29w&em=2&wdStartOn=1')
 
-class OembedXBlock(XBlock):
+class OEmbedXBlock(XBlock):
 
     display_name = String(
         display_name="Display Name",
         help="This name appears in the horizontal navigation at the top of the page.",
         scope=Scope.settings,
-        default="Oembed",
+        default="OEmbed",
     )
 
     document_url = String(
@@ -106,19 +100,19 @@ class OembedXBlock(XBlock):
 
     def student_view(self, context=None):
         """
-        The primary view of the OembedXBlock, shown to students
+        The primary view of the OEmbedXBlock, shown to students
         when viewing courses.
         """
         html = self.resource_string("static/html/oembed.html")
         frag = Fragment(html.format(self=self))
         frag.add_css(self.resource_string("static/css/oembed.css"))
         frag.add_javascript(self.resource_string("static/js/src/oembed.js"))
-        frag.initialize_js('OembedXBlock')
+        frag.initialize_js('OEmbedXBlock')
         return frag
 
     def studio_view(self, context=None):
         """
-        he primary view of the OembedXBlock, shown to teachers
+        he primary view of the OEmbedXBlock, shown to teachers
         when viewing courses.
         """
 
@@ -126,7 +120,7 @@ class OembedXBlock(XBlock):
         frag = Fragment(html.format(self=self))
         frag.add_css(self.resource_string("static/css/oembed.css"))
         frag.add_javascript(self.resource_string("static/js/src/oembed_edit.js"))
-        frag.initialize_js('OembedXBlock')
+        frag.initialize_js('OEmbedXBlock')
         return frag
 
     @XBlock.json_handler
@@ -152,7 +146,7 @@ class OembedXBlock(XBlock):
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
         return [
-            ("OembedXBlock",
+            ("OEmbedXBlock",
              """<vertical_demo>
                 <oembed/>
                 <oembed/>

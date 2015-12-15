@@ -1,1 +1,1 @@
-from .oembed import OembedXBlock
+from .oembed import OEmbedXBlock
