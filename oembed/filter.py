@@ -6,9 +6,7 @@ import re
 import urllib2
 import json
 
-# Helper class to map the document URL into a form required for adding to the courseware, depending upon how it is intended to be used
-class Filter:
-    EMBED_CODE_TEMPLATE = textwrap.dedent("""
+EMBED_CODE_TEMPLATE = textwrap.dedent("""
         <iframe
             src="{}"
             frameborder="0"
@@ -19,6 +17,8 @@ class Filter:
             webkitallowfullscreen="true">
         </iframe>
     """)
+# Helper class to map the document URL into a form required for adding to the courseware, depending upon how it is intended to be used
+class Filter:
 
     @staticmethod
     def get_embed_code(url):
@@ -39,4 +39,4 @@ class Filter:
                 res = json.load(urllib2.urlopen(urls['embed_url'].format(url)))
                 return res['html']
 
-        return Filter.EMBED_CODE_TEMPLATE.format(url)
+        return EMBED_CODE_TEMPLATE.format(url)

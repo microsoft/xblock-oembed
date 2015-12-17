@@ -12,7 +12,7 @@ import mimetypes
 from xblock.core import XBlock
 from xblock.fragment import Fragment
 from xblock.fields import Scope, String
-from django.conf import settings
+from filter import EMBED_CODE_TEMPLATE
 
 import logging
 
@@ -76,7 +76,7 @@ class OEmbedXBlock(XBlock):
         display_name="Output Iframe Embed Code",
         help="Copy the embed code into this field.",
         scope=Scope.settings,
-        default=Filter.EMBED_CODE_TEMPLATE.format(DEFAULT_DOCUMENT_URL)
+        default=EMBED_CODE_TEMPLATE.format(DEFAULT_DOCUMENT_URL)
     )
 
     message = String(
