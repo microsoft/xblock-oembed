@@ -6,8 +6,7 @@ by adding a link through an advanced component that they create in edX's Studio 
 import textwrap
 
 import pkg_resources
-import urllib2
-import mimetypes
+import requests
 
 from xblock.core import XBlock
 from xblock.fragment import Fragment
@@ -141,6 +140,32 @@ class OEmbedXBlock(XBlock):
         self.message_display_state = "block"
 
         return {'result': 'success'}
+
+    @XBlock.json_handler
+    def check_url(self, data, suffix=''):  # pylint: disable=unused-argument,no-self-use
+        """
+        Checks that the given document url is accessible, and therefore assumed to be valid
+        """
+        try:
+            test_url = data['url']
+        except KeyError as ex:
+            LOG.debug("URL not provided - %s", unicode(ex))
+            return {
+                'status_code': 400,
+            }
+
+        try:
+            url_response = requests.head(test_url)
+        # Catch wide range of request exceptions
+        except requests.exceptions.RequestException as ex:
+            LOG.debug("Unable to connect to %s - %s", test_url, unicode(ex))
+            return {
+                'status_code': 400,
+            }
+
+        return {
+            'status_code': url_response.status_code,
+        }
 
     @staticmethod
     def workbench_scenarios():

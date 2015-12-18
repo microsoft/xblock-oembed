@@ -8,8 +8,9 @@ from mock import Mock
 from nose.tools import assert_equals, assert_in
 from oembed.tests.test_const import STUDIO_EDIT_WRAPPER, VALIDATION_WRAPPER, USER_INPUTS_WRAPPER, STATUS_CODE_200
 from oembed.tests.test_const import BUTTONS_WRAPPER, RESULT_SUCCESS, RESULT_ERROR, STATUS_CODE_404, STATUS_CODE_400
-from oembed.filter import EMBED_CODE_TEMPLATE
+from oembed.filter import EMBED_CODE_TEMPLATE, Filter
 from oembed.oembed import DEFAULT_DOCUMENT_URL
+from filter_test_data import TEST_DATA
 
 
 # Constants ###########################################################
@@ -22,6 +23,18 @@ TEST_INCOMPLETE_DATA = {
     'document_url': DEFAULT_DOCUMENT_URL
 }
 
+TEST_VALIDATE_URL_DATA = {
+    'url': 'https://www.youtube.com/watch?v=m0hS2NWXzzg',
+}
+TEST_VALIDATE_UNDEFINED_DATA = {
+    'url': 'undefined'
+}
+TEST_VALIDATE_NONEXISTENT_URL_DATA = {
+    'url': (
+        "https://docs.google.com/presentation/d/1x2ZuzqHsMoh1epK8VsdsadfG"
+        "AlanSo7r9z55ualwQlj-ofBQ/embed?start=true&loop=true&delayms=10000"
+    )
+}
 
 class TestOEmbedBlock(unittest.TestCase):
     """ Tests for OEmbedBlock """
@@ -67,4 +80,45 @@ class TestOEmbedBlock(unittest.TestCase):
         res = block.handle('studio_submit', make_request(body))
         assert_equals(json.loads(res.body), RESULT_ERROR)
 
+    def test_youtube_filter(self):
+        assert_equals(TEST_DATA['youtube']['embed_code'], Filter.get_embed_code(TEST_DATA['youtube']['url']))
+
+    def test_ted_filter(self):
+        assert_equals(TEST_DATA['ted']['embed_code'], Filter.get_embed_code(TEST_DATA['ted']['url']))
+
+    def test_office_mix_filter(self):
+        assert_equals(TEST_DATA['office_mix']['embed_code'], Filter.get_embed_code(TEST_DATA['office_mix']['url']))
+
+    def test_slideshare_filter(self):
+        assert_equals(TEST_DATA['slideshare']['embed_code'], Filter.get_embed_code(TEST_DATA['slideshare']['url']))
+
+    def test_issuu_filter(self):
+        assert_equals(TEST_DATA['issuu']['embed_code'], Filter.get_embed_code(TEST_DATA['issuu']['url']))
+
+    def test_soundcloud_filter(self):
+        assert_equals(TEST_DATA['soundcloud']['embed_code'], Filter.get_embed_code(TEST_DATA['soundcloud']['url']))
+
+    def test_check_document_url(self):  # pylint: disable=no-self-use
+        """ Test verification of the provided URL"""
+        block = TestOEmbedBlock.make_oembed_block()
+
+        data = json.dumps(TEST_VALIDATE_URL_DATA)
+        res = block.handle('check_url', make_request(data))
+        # pylint: disable=no-value-for-parameter
+        assert_equals(json.loads(res.body), STATUS_CODE_200)
+
+        data = json.dumps(TEST_VALIDATE_UNDEFINED_DATA)
+        res = block.handle('check_url', make_request(data))
+
+        assert_equals(json.loads(res.body), STATUS_CODE_400)
+
+        data = json.dumps(TEST_VALIDATE_NONEXISTENT_URL_DATA)
+        res = block.handle('check_url', make_request(data))
+
+        assert_equals(json.loads(res.body), STATUS_CODE_404)
+
+        data = json.dumps({})
+        res = block.handle('check_url', make_request(data))
+
+        assert_equals(json.loads(res.body), STATUS_CODE_400)
 
