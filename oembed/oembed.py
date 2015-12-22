@@ -64,13 +64,6 @@ class OEmbedXBlock(XBlock):
         default=""
     )	
 
-    # model3 = String(
-        # display_name="Model3 preselection",
-        # help="Previous selection.",
-        # scope=Scope.settings,
-        # default="selected=selected"
-    # )	
-
     output_code = String(
         display_name="Output Iframe Embed Code",
         help="Copy the embed code into this field.",
@@ -117,7 +110,7 @@ class OEmbedXBlock(XBlock):
 
         html = self.resource_string("static/html/oembed_edit.html")
         frag = Fragment(html.format(self=self))
-        frag.add_css(self.resource_string("static/css/oembed.css"))
+        frag.add_css(self.resource_string("static/css/oembed_edit.css"))
         frag.add_javascript(self.resource_string("static/js/src/oembed_edit.js"))
         frag.initialize_js('OEmbedXBlock')
         return frag
