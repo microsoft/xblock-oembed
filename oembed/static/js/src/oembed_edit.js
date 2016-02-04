@@ -1,67 +1,115 @@
-/* Javascript for OembedXBlock. */
-function OembedXBlock(runtime, element) {
+/* Javascript for OEmbedXBlock. */
+function OEmbedXBlock(runtime, element) {
 
-  var display_name = $(element).find('input[name=edit_display_name]');
-  var document_url = $(element).find('input[name=edit_document_url]');
-  var error_message = $(element).find('.oembed-xblock .error-message');
+  var clear_name_button = $('.clear-display-name', element);
+  var display_name = $(element).find('#edit_display_name');
+  var document_url = $(element).find('#edit_document_url');
+  var save_button = $('.save-button', element);
+  var validation_alert = $('.validation_alert', element);
+  var defaultName = display_name.attr('data-default-value');
+  var error_message_div = $('.xblock-editor-error-message', element);
+  var xblock_inputs_wrapper = $('.xblock-inputs', element);
 
-  $(element).find('.save-button').bind('click', function() {
+  ToggleClearDefaultName();
+  IsUrlValid();
+
+  $('.clear-display-name', element).bind('click', function() {
+        $(this).addClass('inactive');
+        display_name.val(defaultName);
+  });
+
+  function SaveEditing(){
     var display_name_val = display_name.val().trim();
     var document_url_val = document_url.val().trim();
 
-    clearErrors();
-    
-    if (!display_name_val) {
-      display_name.addClass('error');
-      error_message.addClass('visible');
-      return;
-    }
-
-    if (!document_url_val || (!isValidUrl(document_url_val) && !isValidEmbedCode(document_url_val))) {
-      document_url.addClass('error');
-      error_message.addClass('visible');
-      return;
-    }
-
-    if (isValidEmbedCode(document_url_val)) {
-      document_url.addClass('error');
-      error_message.addClass('visible');
-      return;
-    }
     
     var data = {
       display_name: display_name_val,
       document_url: document_url_val
     };
 
+    error_message_div.html();
+    error_message_div.css('display', 'none');
     var handlerUrl = runtime.handlerUrl(element, 'studio_submit');
 
     $.post(handlerUrl, JSON.stringify(data)).done(function(response) {
-      window.location.reload(false);
+      if (response.result === 'success') {
+                window.location.reload(false);
+      } else {
+                error_message_div.html('Error: '+response.message);
+                error_message_div.css('display', 'block');
+      }
     });
-  });
+  }
+
+  function ToggleClearDefaultName(name, button){
+        if (display_name.val() == defaultName){
+            if (!clear_name_button.hasClass('inactive')){
+                clear_name_button.addClass('inactive');
+            }
+        }
+        else {
+            clear_name_button.removeClass('inactive');
+        }
+  }
 
   display_name.bind('keyup', function(){
-    clearErrors();
+    ToggleClearDefaultName();
   });
 
   document_url.bind('keyup', function(){
-    clearErrors();
+    IsUrlValid();
   });
 
 
   $('.cancel-button', element).bind('click', function() {
     runtime.notify('cancel', {});
   });
-
-  function clearErrors() {
-    display_name.removeClass('error');
-    document_url.removeClass('error');
-    error_message.removeClass('visible');
-  }
   
-  function isValidUrl(url) {
-    return /^(https?):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+  function IsUrlValid(url) {
+    var onedrive_url = document_url.val();
+
+    if(/<iframe /i.test(onedrive_url)){
+        validation_alert.addClass('covered');
+        save_button.removeClass('disabled');
+        document_url.removeClass('error');
+        xblock_inputs_wrapper.removeClass('alerted');
+        save_button.bind('click', SaveEditing);
+        return true;
+    }
+
+    document_url.css({'cursor':'wait'});
+    save_button.addClass('disabled').unbind('click');
+
+    $.ajax({
+        type: "POST",
+        url: runtime.handlerUrl(element, 'check_url'),
+        data: JSON.stringify({url: onedrive_url}),
+        success: function(result) {
+            if (result.status_code >= 400){
+                validation_alert.removeClass('covered');
+                document_url.addClass('error');
+                xblock_inputs_wrapper.addClass('alerted');
+            } else {
+                validation_alert.addClass('covered');
+                save_button.removeClass('disabled');
+                document_url.removeClass('error');
+                xblock_inputs_wrapper.removeClass('alerted');
+
+                save_button.bind('click', SaveEditing);
+            }
+        },
+        error: function(result) {
+            validation_alert.removeClass('covered');
+            save_button.addClass('disabled').unbind('click');
+            document_url.addClass('error');
+            xblock_inputs_wrapper.addClass('alerted');
+        },
+
+        complete: function() {
+            document_url.css({'cursor':'auto'});
+        }
+    });
   }
   
   function isValidEmbedCode(code) {

@@ -23,7 +23,7 @@ def package_data(pkg, roots):
 setup(
     name='xblock-oembed',
     version='0.1',
-    description='Oembed XBlock for adding external documents to courseware',
+    description='OEmbed XBlock for adding external documents to courseware',
     packages=[
         'oembed',
     ],
@@ -32,7 +32,7 @@ setup(
     ],
     entry_points={
         'xblock.v1': [
-            'oembed = oembed:OembedXBlock',
+            'oembed = oembed:OEmbedXBlock',
         ]
     },
     package_data=package_data("oembed", ["static", "public"]),
