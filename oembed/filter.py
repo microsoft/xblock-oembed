@@ -24,7 +24,7 @@ class Filter:
     def get_embed_code(url):
         url = url.strip()
         # check if it already is an embed code
-        embed_code_regex = '<iframe '
+        embed_code_regex = '<iframe'
         matched = re.match(embed_code_regex, url, re.IGNORECASE)
 
         if matched is not None:

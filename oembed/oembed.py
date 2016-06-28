@@ -18,7 +18,7 @@ import logging
 LOG = logging.getLogger(__name__)
 from filter import Filter
 
-DEFAULT_DOCUMENT_URL = ('https://onedrive.live.com/embed?cid=ADC6477D8F22FD9D&resid=ADC6477D8F22FD9D%21104&authkey=AFWEOfGpKb8L29w&em=2&wdStartOn=1')
+DEFAULT_DOCUMENT_URL = ('https://www.youtube.com/watch?v=B-EFayAA5_0')
 
 class OEmbedXBlock(XBlock):
 
