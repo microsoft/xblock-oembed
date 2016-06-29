@@ -33,7 +33,7 @@ class OEmbedXBlock(XBlock):
         display_name="Document URL",
         help="Navigate to the document in your browser and ensure that it is public. Copy its URL and paste it into this field.",
         scope=Scope.settings,
-        default=DEFAULT_DOCUMENT_URL
+        default=EMBED_CODE_TEMPLATE.format(DEFAULT_DOCUMENT_URL)
     )
 
     reference_name = String(
