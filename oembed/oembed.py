@@ -18,7 +18,7 @@ import logging
 LOG = logging.getLogger(__name__)
 from filter import Filter
 
-DEFAULT_DOCUMENT_URL = 'https://www.youtube.com/watch?v=B-EFayAA5_0'
+DEFAULT_DOCUMENT_URL = 'https://www.youtube.com/embed/B-EFayAA5_0'
 
 class OEmbedXBlock(XBlock):
 

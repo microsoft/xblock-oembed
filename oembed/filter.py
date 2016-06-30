@@ -7,14 +7,7 @@ import urllib2
 import json
 
 EMBED_CODE_TEMPLATE = textwrap.dedent("""
-        <iframe
-            src="{}"
-            frameborder="0"
-            width="960"
-            height="569"
-            allowfullscreen="true"
-            mozallowfullscreen="true"
-            webkitallowfullscreen="true">
+        <iframe src="{}" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true">
         </iframe>
     """)
 # Helper class to map the document URL into a form required for adding to the courseware, depending upon how it is intended to be used
