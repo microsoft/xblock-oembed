@@ -5,6 +5,7 @@ from const import OEMBED_SERVICES
 import re
 import urllib2
 import json
+import pyembed
 
 EMBED_CODE_TEMPLATE = textwrap.dedent("""
         <iframe src="{}" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true">
@@ -25,11 +26,12 @@ class Filter:
 
         # match the url against url patterns for various services to determine the source of the document and then convert
         # the url into an embed code depending upon whether the service supports OEmbed protocol
-        for service, urls in OEMBED_SERVICES.iteritems():
-            matched = re.match(urls['regex'], url, re.IGNORECASE)
+        #for service, urls in OEMBED_SERVICES.iteritems():
+        #    matched = re.match(urls['regex'], url, re.IGNORECASE)
 
-            if matched is not None:
-                res = json.load(urllib2.urlopen(urls['embed_url'].format(url)))
-                return res['html']
-
-        return EMBED_CODE_TEMPLATE.format(url)
+        #    if matched is not None:
+        #        res = json.load(urllib2.urlopen(urls['embed_url'].format(url)))
+        #        return res['html']
+        pyembed = PyEmbed()
+        return pyembed.embed(url, width=960, height=569)
+        #return EMBED_CODE_TEMPLATE.format(url)

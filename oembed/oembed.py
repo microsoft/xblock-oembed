@@ -4,7 +4,7 @@ by adding a link through an advanced component that they create in edX's Studio 
 """ 
 
 import textwrap
-
+import pyembed
 import pkg_resources
 import requests
 
@@ -21,6 +21,7 @@ from filter import Filter
 DEFAULT_DOCUMENT_URL = 'https://www.youtube.com/embed/B-EFayAA5_0'
 
 class OEmbedXBlock(XBlock):
+    pyembed = PyEmbed()
 
     display_name = String(
         display_name="Display Name",
@@ -33,7 +34,7 @@ class OEmbedXBlock(XBlock):
         display_name="Document URL",
         help="Navigate to the document in your browser and ensure that it is public. Copy its URL and paste it into this field.",
         scope=Scope.settings,
-        default=EMBED_CODE_TEMPLATE.format(DEFAULT_DOCUMENT_URL)
+        default= pyembed.embed(DEFAULT_DOCUMENT_URL, width = 960, height = 569)  #EMBED_CODE_TEMPLATE.format(DEFAULT_DOCUMENT_URL)
     )
 
     reference_name = String(
@@ -68,7 +69,7 @@ class OEmbedXBlock(XBlock):
         display_name="Output Iframe Embed Code",
         help="Copy the embed code into this field.",
         scope=Scope.settings,
-        default=EMBED_CODE_TEMPLATE.format(DEFAULT_DOCUMENT_URL)
+        default=pyembed.embed(DEFAULT_DOCUMENT_URL, width=960, height=569)
     )
 
     message = String(
