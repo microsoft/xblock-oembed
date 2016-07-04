@@ -1,3 +1,6 @@
+""" Copyright (c) Microsoft Corporation. All Rights Reserved. """
+""" Licensed under the MIT license. See LICENSE file on the project webpage for details. """
+
 """ 
 The "Oembed XBlock" allows course staffers to embed files/vidoes stored in various internet file storage services to the courseware (courseware, course info and syllabus)
 by adding a link through an advanced component that they create in edX's Studio authoring tool. The files or videos can be added as embedded content.
