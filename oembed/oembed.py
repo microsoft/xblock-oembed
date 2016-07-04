@@ -7,7 +7,7 @@ by adding a link through an advanced component that they create in edX's Studio 
 """ 
 
 import textwrap
-import pyembed
+import pyembed.core import PyEmbed
 import pkg_resources
 import requests
 
